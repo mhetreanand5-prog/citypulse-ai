@@ -1,7 +1,10 @@
 import Ground from "../components/environment/Ground";
-import Tree from "../components/environment/Tree";
+import TreeModel from "../components/environment/TreeModel";
 import Road from "../components/roads/Road";
 import Building from "../components/city/Building";
+import StreetLight from "../components/lights/StreetLight";
+
+// -------------------- Roads --------------------
 
 const roads = [];
 
@@ -20,10 +23,13 @@ for (let x = -24; x <= 24; x += 12) {
   });
 }
 
+// -------------------- Buildings --------------------
+
 const buildings = [];
 
 for (let x = -24; x <= 24; x += 4) {
   for (let z = -24; z <= 24; z += 4) {
+    // Leave roads empty
     if (Math.abs(x % 12) < 2 || Math.abs(z % 12) < 2) continue;
 
     const height = Math.random() * 10 + 2;
@@ -35,6 +41,8 @@ for (let x = -24; x <= 24; x += 4) {
   }
 }
 
+// -------------------- Trees --------------------
+
 const trees = [];
 
 for (let x = -24; x <= 24; x += 6) {
@@ -42,9 +50,35 @@ for (let x = -24; x <= 24; x += 6) {
     if (Math.random() > 0.45) continue;
 
     trees.push({
-      position: [x + 1.5, 0.6, z + 1.5],
+      position: [x + 1.5, 0, z + 1.5],
     });
   }
+}
+
+// -------------------- Street Lights --------------------
+
+const streetLights = [];
+
+// Horizontal Roads
+for (let x = -24; x <= 24; x += 6) {
+  streetLights.push({
+    position: [x, 1.75, -1.8],
+  });
+
+  streetLights.push({
+    position: [x, 1.75, 1.8],
+  });
+}
+
+// Vertical Roads
+for (let z = -24; z <= 24; z += 6) {
+  streetLights.push({
+    position: [-1.8, 1.75, z],
+  });
+
+  streetLights.push({
+    position: [1.8, 1.75, z],
+  });
 }
 
 function CityScene() {
@@ -61,7 +95,15 @@ function CityScene() {
       ))}
 
       {trees.map((tree, index) => (
-        <Tree key={`tree-${index}`} {...tree} />
+        <TreeModel
+          key={`tree-${index}`}
+          position={tree.position}
+          scale={0.8}
+        />
+      ))}
+
+      {streetLights.map((light, index) => (
+        <StreetLight key={`light-${index}`} {...light} />
       ))}
     </>
   );
